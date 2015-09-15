@@ -1,18 +1,40 @@
 package hds.pvcos;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+
+import com.firebase.client.Firebase;
 
 public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Firebase.setAndroidContext(this);
+
         setContentView(R.layout.activity_main);
+
+        Firebase server = ((PvcApp)getApplication()).getServer();
+        if (server.getAuth() == null) {
+            // Not authed yet
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        }
     }
 
+    public void buttonLogoutClick(View v) {
+        Firebase server = ((PvcApp)getApplication()).getServer();
+        server.unauth();
+        finish();
+    }
+
+    public void buttonMyLocationClick(View v) {
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -35,4 +57,6 @@ public class MainActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }

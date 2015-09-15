@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.ContentResolver;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
@@ -14,6 +15,7 @@ import android.os.AsyncTask;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -32,16 +34,16 @@ import com.firebase.client.FirebaseError;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
-
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
-    private UserLoginTask mAuthTask = null;
+    private boolean isLoggingIn;
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -94,9 +96,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
      * errors are presented and no actual login attempt is made.
      */
     public void attemptLogin() {
-        if (mAuthTask != null) {
+        if (isLoggingIn)
             return;
-        }
 
         // Reset errors.
         mEmailView.setError(null);
@@ -135,8 +136,43 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
+            Firebase server = ((PvcApp)getApplication()).getServer();
+            server.authWithPassword(email, password, new Firebase.AuthResultHandler() {
+                @Override
+                public void onAuthenticated(AuthData authData) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            finishLogin(true);
+                        }
+                    });
+                }
+
+                @Override
+                public void onAuthenticationError(FirebaseError firebaseError) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            finishLogin(false);
+                        }
+                    });
+                }
+            });
+
+            isLoggingIn = true;
+        }
+    }
+
+    private void finishLogin(boolean success) {
+        showProgress(false);
+        isLoggingIn = false;
+
+        if (success) {
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+        } else {
+            mPasswordView.setError(getString(R.string.error_incorrect_password));
+            mPasswordView.requestFocus();
         }
     }
 
@@ -236,59 +272,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
         mEmailView.setAdapter(adapter);
-    }
-
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-
-        private final String mEmail;
-        private final String mPassword;
-
-        UserLoginTask(String email, String password) {
-            mEmail = email;
-            mPassword = password;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            Firebase ref = new Firebase("https://boiling-torch-177.firebaseio.com/");
-            Boolean success = false;
-            ref.authWithPassword(mEmail, mPassword, new Firebase.AuthResultHandler() {
-                @Override
-                public void onAuthenticated(AuthData authData) {
-
-                }
-
-                @Override
-                public void onAuthenticationError(FirebaseError firebaseError) {
-                    success = true;
-                }
-            });
-
-            return success;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            showProgress(false);
-
-            if (success) {
-                finish();
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
-        }
     }
 }
 
