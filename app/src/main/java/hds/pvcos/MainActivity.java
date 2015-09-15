@@ -33,7 +33,7 @@ public class MainActivity extends Activity {
     }
 
     public void buttonMyLocationClick(View v) {
-
+        startActivity(new Intent(this, MapsActivity.class));
     }
 
     @Override
