@@ -32,8 +32,7 @@ public class MapsActivity extends FragmentActivity {
     private ArrayList<Marker> markers = new ArrayList<>();
 
     private String getUserName() {
-        Firebase server = ((PvcApp)getApplication()).getServer();
-        String name = server.getAuth().getUid();
+        String name = ((PvcApp)getApplication()).getEmail();
         return name;
     }
 
@@ -87,12 +86,12 @@ public class MapsActivity extends FragmentActivity {
         usersListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                ChangeOrAddMarkersForUsers(dataSnapshot);
+                ChangeOrAddMarkerForUser(dataSnapshot);
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                ChangeOrAddMarkersForUsers(dataSnapshot);
+                ChangeOrAddMarkerForUser(dataSnapshot);
             }
 
             @Override
@@ -113,14 +112,9 @@ public class MapsActivity extends FragmentActivity {
         updateUserPositionRunnable.run();
     }
 
-    private void ChangeOrAddMarkersForUsers(DataSnapshot users) {
-        for (DataSnapshot user : users.getChildren())
-            ChangeOrAddMarkerForUser(user);
-    }
-
     private void ChangeOrAddMarkerForUser(DataSnapshot user) {
-        String name = (String)user.child("name").getValue();
-        String location = (String)user.child("location").getValue();
+        String name = (String)user.getKey();
+        String location = (String)user.getValue();
 
         if (name.equals(getUserName()))
             return;

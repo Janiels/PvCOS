@@ -104,7 +104,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
+        final String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
@@ -143,7 +143,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            finishLogin(true);
+                            finishLogin(true, email);
                         }
                     });
                 }
@@ -153,7 +153,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            finishLogin(false);
+                            finishLogin(false, null);
                         }
                     });
                 }
@@ -163,11 +163,12 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         }
     }
 
-    private void finishLogin(boolean success) {
+    private void finishLogin(boolean success, String email) {
         showProgress(false);
         isLoggingIn = false;
 
         if (success) {
+            ((PvcApp)getApplication()).setEmail(email);
             startActivity(new Intent(this, MainActivity.class));
             finish();
         } else {
