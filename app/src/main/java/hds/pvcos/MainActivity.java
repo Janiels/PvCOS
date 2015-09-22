@@ -19,7 +19,10 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         Firebase server = ((PvcApp)getApplication()).getServer();
-        if (server.getAuth() == null) {
+        if (server.getAuth() == null || ((PvcApp)getApplication()).getEmail() == null) {
+            if (server.getAuth() != null)
+                server.unauth();
+            
             // Not authed yet
             startActivity(new Intent(this, LoginActivity.class));
             finish();
