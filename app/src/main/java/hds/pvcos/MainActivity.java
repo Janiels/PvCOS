@@ -29,6 +29,7 @@ public class MainActivity extends Activity {
     public void buttonLogoutClick(View v) {
         Firebase server = ((PvcApp)getApplication()).getServer();
         server.unauth();
+        startActivity(new Intent(this, LoginActivity.class));
         finish();
     }
 
