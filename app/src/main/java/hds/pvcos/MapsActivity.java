@@ -9,7 +9,6 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -19,9 +18,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.TimerTask;
 
 public class MapsActivity extends FragmentActivity {
 
@@ -31,9 +28,9 @@ public class MapsActivity extends FragmentActivity {
     private Runnable updateUserPositionRunnable;
     private ArrayList<Marker> markers = new ArrayList<>();
 
-    private String getUserName() {
-        String name = ((PvcApp)getApplication()).getEmail();
-        return name;
+    private String getEmail() {
+        String email = ((PvcApp)getApplication()).getEmail();
+        return email;
     }
 
     @Override
@@ -63,7 +60,15 @@ public class MapsActivity extends FragmentActivity {
 
         String locationStr = String.format(Locale.US, "%f,%f", lat, lng);
 
-        server.child("users").child(getUserName()).setValue(locationStr);
+        String email = getEmail();
+        String user = email.substring(email.indexOf('@'))
+                            .replace('.', ' ')
+                            .replace('#', ' ')
+                            .replace('$', ' ')
+                            .replace('[', ' ')
+                            .replace(']', ' ');
+
+        server.child("users").child(user).setValue(locationStr);
     }
 
     @Override
@@ -116,7 +121,7 @@ public class MapsActivity extends FragmentActivity {
         String name = (String)user.getKey();
         String location = (String)user.getValue();
 
-        if (name.equals(getUserName()))
+        if (name.equals(getEmail()))
             return;
 
         Marker foundMarker = null;
