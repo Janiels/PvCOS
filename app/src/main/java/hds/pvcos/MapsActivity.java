@@ -61,7 +61,7 @@ public class MapsActivity extends FragmentActivity {
         String locationStr = String.format(Locale.US, "%f,%f", lat, lng);
 
         String email = getEmail();
-        String user = email.substring(email.indexOf('@'))
+        String user = email.substring(0, email.indexOf('@'))
                             .replace('.', ' ')
                             .replace('#', ' ')
                             .replace('$', ' ')
