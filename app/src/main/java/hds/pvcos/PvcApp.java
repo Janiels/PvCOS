@@ -122,5 +122,7 @@ public class PvcApp extends Application {
         SharedPreferences prefs = getSharedPreferences(pvcosPrefs, 0);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("wifis", sb.toString());
+
+        editor.commit();
     }
 }
