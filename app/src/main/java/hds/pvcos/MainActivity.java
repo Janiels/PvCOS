@@ -6,12 +6,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
+import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 
@@ -53,8 +55,10 @@ public class MainActivity extends Activity {
             Log.w("PvCOS", "BroadcastReceiver onReceive");
             final String action = intent.getAction();
             if (action.equals(WifiManager.NETWORK_STATE_CHANGED_ACTION)) {
-                Log.w("PvCOS", "Connected to network " + ((WifiManager)getSystemService(WIFI_SERVICE)).getConnectionInfo().getSSID());
+                NetworkInfo netInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
+                Log.w("PvCOS", "Connected to network " + ((WifiManager)getSystemService(WIFI_SERVICE)).getConnectionInfo().getSSID() + " state: " + netInfo.getDetailedState().toString());
                 WifiSettings settings = ((PvcApp)getApplication()).getCurrentWifiSettings(false);
+                Log.w("PvCOS", "settings: " + (settings == null ? "null" : "not null"));
                 if (settings != null) {
                     setSound(settings.getSoundOption());
                 }
@@ -65,6 +69,15 @@ public class MainActivity extends Activity {
     private void setSound(SoundOption sound) {
         if (sound == SoundOption.DoNothing)
             return;
+
+        String text;
+        if (sound == SoundOption.Mute) {
+            text = "Muting";
+        } else {
+            text = "Unmuting";
+        }
+
+        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
 
         int adjust = sound == SoundOption.Mute ? AudioManager.ADJUST_MUTE : AudioManager.ADJUST_UNMUTE;
 
