@@ -79,10 +79,20 @@ public class MainActivity extends Activity {
 
         Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
 
-        boolean muted = sound == SoundOption.Mute;
-
         AudioManager audioMgr = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+
+        if (sound == SoundOption.Mute)
+            muteStream(audioMgr, AudioManager.STREAM_MUSIC);
+        else
+            unmuteStream(audioMgr, AudioManager.STREAM_MUSIC);
+    }
+
+    private void muteStream(AudioManager audioMgr, int stream) {
         audioMgr.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
+    }
+
+    private void unmuteStream(AudioManager audioMgr, int stream) {
+        audioMgr.setStreamVolume(stream, audioMgr.getStreamMaxVolume(stream), 0);
     }
 
     public void buttonWifiNetworksClick(View v) {
