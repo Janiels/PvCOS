@@ -36,7 +36,7 @@ public class MainActivity extends Activity {
 
         Log.w("PvCOS", "LORTET VIRKER");
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION);
+        intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
         registerReceiver(broadcastReceiver, intentFilter);
     }
 
@@ -52,7 +52,7 @@ public class MainActivity extends Activity {
         public void onReceive(Context context, Intent intent) {
             Log.w("PvCOS", "BroadcastReceiver onReceive");
             final String action = intent.getAction();
-            if (action.equals(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION)) {
+            if (action.equals(WifiManager.NETWORK_STATE_CHANGED_ACTION)) {
                 Log.w("PvCOS", "Connected to network " + ((WifiManager)getSystemService(WIFI_SERVICE)).getConnectionInfo().getSSID());
                 WifiSettings settings = ((PvcApp)getApplication()).getCurrentWifiSettings(false);
                 if (settings != null) {
