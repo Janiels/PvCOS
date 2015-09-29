@@ -82,11 +82,7 @@ public class MainActivity extends Activity {
         boolean muted = sound == SoundOption.Mute;
 
         AudioManager audioMgr = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
-        audioMgr.setStreamMute(AudioManager.STREAM_NOTIFICATION, muted);
-        audioMgr.setStreamMute(AudioManager.STREAM_ALARM, muted);
-        audioMgr.setStreamMute(AudioManager.STREAM_MUSIC, muted);
-        audioMgr.setStreamMute(AudioManager.STREAM_RING, muted);
-        audioMgr.setStreamMute(AudioManager.STREAM_SYSTEM, muted);
+        audioMgr.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
     }
 
     public void buttonWifiNetworksClick(View v) {
