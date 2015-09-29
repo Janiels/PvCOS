@@ -22,7 +22,7 @@ public class MainActivity extends Activity {
         if (server.getAuth() == null || ((PvcApp)getApplication()).getEmail() == null) {
             if (server.getAuth() != null)
                 server.unauth();
-            
+
             // Not authed yet
             startActivity(new Intent(this, LoginActivity.class));
             finish();
@@ -34,6 +34,9 @@ public class MainActivity extends Activity {
         server.unauth();
         startActivity(new Intent(this, LoginActivity.class));
         finish();
+    }
+    public void buttonBluetoothClick(View v) {
+        startActivity(new Intent(this, BluetoothActivity.class));
     }
 
     public void buttonMyLocationClick(View v) {

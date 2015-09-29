@@ -5,4 +5,5 @@
     <string name="myLocButtonText">My location</string>
     <string name="logOutButtonText">Log Out</string>
     <string name="title_activity_maps">Map</string>
+    <string name="title_activity_bluetooth">BluetoothActivity</string>
 </resources>
