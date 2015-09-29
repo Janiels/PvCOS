@@ -88,7 +88,7 @@ public class MainActivity extends Activity {
     }
 
     private void muteStream(AudioManager audioMgr, int stream) {
-        audioMgr.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
+        audioMgr.setStreamVolume(stream, 0, 0);
     }
 
     private void unmuteStream(AudioManager audioMgr, int stream) {
