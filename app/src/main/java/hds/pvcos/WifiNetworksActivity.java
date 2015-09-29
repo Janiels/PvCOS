@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 public class WifiNetworksActivity extends Activity {
 
@@ -52,6 +53,11 @@ public class WifiNetworksActivity extends Activity {
                 break;
         }
 
-        ((PvcApp)getApplication()).saveWifiSettings(currentSetting);
+        saveSettings(currentSetting);
+    }
+
+    private void saveSettings(WifiSettings settings) {
+        ((PvcApp)getApplication()).saveWifiSettings(settings);
+        ((TextView)findViewById(R.id.textView)).setText("Saved setting for " + settings.getWifiName());
     }
 }

@@ -6,7 +6,7 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="hds.pvcos.WifiNetworksActivity">
 
-    <EditText
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/editText"
@@ -44,6 +44,11 @@
             android:id="@+id/radioButtonNoSoundChange"
             android:checked="true"
             android:onClick="buttonSelectSoundOptionClick" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView" />
 
     </RadioGroup>
 
