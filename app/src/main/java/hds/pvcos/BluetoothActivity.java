@@ -1,5 +1,6 @@
 package hds.pvcos;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -15,7 +16,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-public class BluetoothActivity extends AppCompatActivity {
+public class BluetoothActivity extends Activity {
 
     private ListView listView;
     private BluetoothAdapter bluetoothAdapter;
@@ -26,9 +27,14 @@ public class BluetoothActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth);
 
-        listView = (ListView)findViewById(R.id.listView);
+        listView = (ListView) findViewById(R.id.listView);
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (bluetoothAdapter == null) {
+            finish();
+            return;
+        }
+
         if (!bluetoothAdapter.isEnabled())
             bluetoothAdapter.enable();
 
