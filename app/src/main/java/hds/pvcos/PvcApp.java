@@ -104,6 +104,7 @@ public class PvcApp extends Application {
 
             SoundOption soundOption = SoundOption.valueOf(wifiSplit[1]);
             settings.setSoundOption(soundOption);
+            wifiSettings.add(settings);
         }
 
         return wifiSettings;
