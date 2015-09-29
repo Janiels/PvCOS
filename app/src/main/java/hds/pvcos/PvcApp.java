@@ -8,6 +8,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.SupplicantState;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.util.Log;
 
 import com.firebase.client.Firebase;
 
@@ -89,6 +90,7 @@ public class PvcApp extends Application {
     private ArrayList<WifiSettings> getAllWifiSettings() {
         SharedPreferences prefs = getSharedPreferences(pvcosPrefs, 0);
         String wifis = prefs.getString("wifis", null);
+        Log.w("PvCOS", "Loading " + wifis);
         if (wifis == null)
             return new ArrayList<>();
 
@@ -123,6 +125,7 @@ public class PvcApp extends Application {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("wifis", sb.toString());
 
+        Log.w("PvCOS", "Saving " + sb.toString());
         editor.commit();
     }
 }
