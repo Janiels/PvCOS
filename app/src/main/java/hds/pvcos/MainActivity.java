@@ -79,14 +79,14 @@ public class MainActivity extends Activity {
 
         Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
 
-        int adjust = sound == SoundOption.Mute ? AudioManager.ADJUST_MUTE : AudioManager.ADJUST_UNMUTE;
+        int flag = sound == SoundOption.Mute ? AudioManager.ADJUST_MUTE : AudioManager.ADJUST_UNMUTE;
 
         AudioManager audioMgr = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
-        audioMgr.adjustStreamVolume(AudioManager.STREAM_NOTIFICATION, adjust, 0);
-        audioMgr.adjustStreamVolume(AudioManager.STREAM_ALARM, adjust, 0);
-        audioMgr.adjustStreamVolume(AudioManager.STREAM_MUSIC, adjust, 0);
-        audioMgr.adjustStreamVolume(AudioManager.STREAM_RING, adjust, 0);
-        audioMgr.adjustStreamVolume(AudioManager.STREAM_SYSTEM, adjust, 0);
+        audioMgr.adjustStreamVolume(AudioManager.STREAM_NOTIFICATION, AudioManager.ADJUST_SAME, flag);
+        audioMgr.adjustStreamVolume(AudioManager.STREAM_ALARM, AudioManager.ADJUST_SAME, flag);
+        audioMgr.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_SAME, flag);
+        audioMgr.adjustStreamVolume(AudioManager.STREAM_RING, AudioManager.ADJUST_SAME, flag);
+        audioMgr.adjustStreamVolume(AudioManager.STREAM_SYSTEM, AudioManager.ADJUST_SAME, flag);
     }
 
     public void buttonWifiNetworksClick(View v) {
