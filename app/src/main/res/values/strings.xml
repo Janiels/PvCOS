@@ -6,4 +6,5 @@
     <string name="logOutButtonText">Log Out</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_bluetooth">BluetoothActivity</string>
+    <string name="title_activity_wifi_networks">WifiNetworksActivity</string>
 </resources>
