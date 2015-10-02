@@ -8,6 +8,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.SupplicantState;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.firebase.client.Firebase;
@@ -39,14 +40,7 @@ public class PvcApp extends Application {
 
     private static final String pvcosPrefs = "PvCOSPrefs";
     public WifiSettings getCurrentWifiSettings(boolean create) {
-        WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
-        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-
-        SupplicantState state = wifiInfo.getSupplicantState();
-        String ssid = "<NOT CONNECTED>";
-        if (state == SupplicantState.COMPLETED) {
-            ssid = wifiInfo.getSSID();
-        }
+        String ssid = getCurrentWifiSSID();
 
         WifiSettings settings = getWifiSettings(ssid);
         if (settings == null && create) {
@@ -55,6 +49,21 @@ public class PvcApp extends Application {
         }
 
         return settings;
+    }
+
+    @NonNull
+    public String getCurrentWifiSSID() {
+        WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+
+        SupplicantState state = wifiInfo.getSupplicantState();
+        String ssid = "<NOT CONNECTED>";
+        if (state == SupplicantState.COMPLETED) {
+            ssid = wifiInfo.getSSID();
+            if (ssid.startsWith("\"") && ssid.endsWith("\""))
+                ssid = ssid.substring(1, ssid.length() - 1);
+        }
+        return ssid;
     }
 
     public WifiSettings getWifiSettings(String wifiName) {
@@ -87,11 +96,11 @@ public class PvcApp extends Application {
         setAllWifiSettings(allWifiSettings);
     }
 
-    private ArrayList<WifiSettings> getAllWifiSettings() {
+    public ArrayList<WifiSettings> getAllWifiSettings() {
         SharedPreferences prefs = getSharedPreferences(pvcosPrefs, 0);
         String wifis = prefs.getString("wifis", null);
         Log.w("PvCOS", "Loading " + wifis);
-        if (wifis == null)
+        if (wifis == null || wifis.equals(""))
             return new ArrayList<>();
 
         ArrayList<WifiSettings> wifiSettings = new ArrayList<>();
@@ -128,5 +137,15 @@ public class PvcApp extends Application {
 
         Log.w("PvCOS", "Saving " + sb.toString());
         editor.commit();
+    }
+
+    public void removeWifiByName(String name) {
+        ArrayList<WifiSettings> wifiSettings = new ArrayList<WifiSettings>();
+        for(WifiSettings wifiSetting : getAllWifiSettings()) {
+            if (!wifiSetting.getWifiName().equals(name)) {
+                wifiSettings.add(wifiSetting);
+            }
+        }
+        setAllWifiSettings(wifiSettings);
     }
 }

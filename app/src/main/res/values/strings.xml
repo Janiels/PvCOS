@@ -7,4 +7,6 @@
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_bluetooth">BluetoothActivity</string>
     <string name="title_activity_wifi_networks">WifiNetworksActivity</string>
+    <string name="title_activity_notifications">NotificationsActivity</string>
+    <string name="title_activity_edit_notifications">EditNotifications</string>
 </resources>

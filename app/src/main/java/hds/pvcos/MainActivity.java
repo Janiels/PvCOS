@@ -114,6 +114,10 @@ public class MainActivity extends Activity {
         startActivity(new Intent(this, MapsActivity.class));
     }
 
+    public void buttonEditNotificationClick(View v) {
+        startActivity(new Intent(this, NotificationsActivity.class));
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

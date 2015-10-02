@@ -14,7 +14,8 @@
         android:id="@+id/button"
         android:onClick="buttonLogoutClick"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/button6" />
 
     <Button
         android:layout_width="wrap_content"
@@ -23,7 +24,8 @@
         android:id="@+id/button2"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:onClick="buttonMyLocationClick" />
+        android:onClick="buttonMyLocationClick"
+        android:layout_alignParentEnd="true" />
 
     <Button
         android:layout_width="wrap_content"
@@ -32,7 +34,8 @@
         android:id="@+id/button3"
         android:layout_below="@+id/button2"
         android:layout_alignParentStart="true"
-        android:onClick="buttonBluetoothClick" />
+        android:onClick="buttonBluetoothClick"
+        android:layout_alignParentEnd="true" />
 
     <Button
         android:layout_width="wrap_content"
@@ -42,5 +45,25 @@
         android:layout_below="@+id/button3"
         android:layout_alignParentStart="true"
         android:nestedScrollingEnabled="false"
-        android:onClick="buttonWifiNetworksClick" />
+        android:onClick="buttonWifiNetworksClick"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit notifications"
+        android:id="@+id/button6"
+        android:layout_below="@+id/button4"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:onClick="buttonEditNotificationClick" />
+
+    <AnalogClock
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/analogClock"
+        android:layout_below="@+id/button6"
+        android:layout_above="@+id/button"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>
