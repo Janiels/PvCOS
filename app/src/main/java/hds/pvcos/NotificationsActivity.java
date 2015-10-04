@@ -3,14 +3,11 @@ package hds.pvcos;
 import android.content.Intent;
 import android.os.Bundle;
 import android.app.Activity;
-import android.util.Log;
 import android.view.View;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.ScrollView;
 
 import java.util.ArrayList;
 
@@ -30,6 +27,8 @@ public class NotificationsActivity extends Activity {
                 selectedStringInView = (String)view.getItemAtPosition(position);
             }
         });
+
+        setDefaultWifiName();
     }
 
     @Override
@@ -56,7 +55,7 @@ public class NotificationsActivity extends Activity {
         intent.putExtra(EditNotifications.WIFINAMEIDENTIFIER, selectedStringInView);
         startActivity(intent);
 
-        ClearTextField();
+        setDefaultWifiName();
     }
 
     public void buttonDeleteSelectedNotificationClick(View v) {
@@ -75,10 +74,10 @@ public class NotificationsActivity extends Activity {
         intent.putExtra(EditNotifications.WIFINAMEIDENTIFIER, newName);
         startActivity(intent);
 
-        ClearTextField();
+        setDefaultWifiName();
     }
 
-    private void ClearTextField() {
+    private void setDefaultWifiName() {
         String currentWifiName = ((PvcApp)getApplication()).getCurrentWifiSSID();
         ((EditText)findViewById(R.id.editText2)).setText(currentWifiName);
     }

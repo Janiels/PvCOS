@@ -9,6 +9,7 @@ import android.media.AudioManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -60,11 +61,23 @@ public class MainActivity extends Activity {
                 WifiSettings settings = ((PvcApp)getApplication()).getCurrentWifiSettings(false);
                 Log.w("PvCOS", "settings: " + (settings == null ? "null" : "not null"));
                 if (settings != null) {
-                    setSound(settings.getSoundOption());
+                    onLogonToWifi(settings);
                 }
             }
         }
     };
+
+    private long lastWifiChangeTime;
+    private void onLogonToWifi(WifiSettings settings) {
+        // Only allow notifications every 5 seconds
+        long curTime = SystemClock.elapsedRealtime();
+        if (lastWifiChangeTime != 0 && (curTime - lastWifiChangeTime) < 5000)
+            return;
+
+        lastWifiChangeTime = curTime;
+
+        setSound(settings.getSoundOption());
+    }
 
     private void setSound(SoundOption sound) {
         if (sound == SoundOption.DoNothing)

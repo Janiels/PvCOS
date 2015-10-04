@@ -45,7 +45,7 @@
     <Button
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Edit"
+        android:text="Edit selected"
         android:id="@+id/button8"
         android:layout_above="@+id/editText2"
         android:layout_alignParentEnd="true"
