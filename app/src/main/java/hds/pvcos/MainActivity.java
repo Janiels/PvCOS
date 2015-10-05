@@ -114,7 +114,8 @@ public class MainActivity extends Activity {
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.cast_ic_notification_1)
                 .setContentTitle(title)
-                .setContentText(detail);
+                .setContentText(detail)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(detail));
 
         NotificationManager notificationMgr =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
