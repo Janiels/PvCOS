@@ -2,7 +2,6 @@ package hds.pvcos;
 
 import android.os.Bundle;
 import android.app.Activity;
-import android.util.Log;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -31,13 +30,16 @@ public class EditNotifications extends Activity {
             case Unmute:
                 ((RadioButton)findViewById(R.id.radioButton2)).setChecked(true);
                 break;
+            case Vibrate:
+                ((RadioButton)findViewById(R.id.radioButton4)).setChecked(true);
+                break;
         }
     }
 
     public void buttonSaveNotificationChangeClick(View v) {
         // do stuff
         String newName = ((TextView)findViewById(R.id.editText3)).getText().toString();
-        if (newName == null || newName.equals("")) return;
+        if (newName.equals("")) return;
 
         ((PvcApp)getApplication()).removeWifiByName(originalName);
 
@@ -50,6 +52,9 @@ public class EditNotifications extends Activity {
         } else if (((RadioButton)findViewById(R.id.radioButton2)).isChecked()) {
             // unmute
             wifiSetting.setSoundOption(SoundOption.Unmute);
+        } else if (((RadioButton)findViewById(R.id.radioButton4)).isChecked()) {
+            // vibrate
+            wifiSetting.setSoundOption(SoundOption.Vibrate);
         } else {
             // do nothing
             wifiSetting.setSoundOption(SoundOption.DoNothing);

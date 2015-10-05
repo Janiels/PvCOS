@@ -1,6 +1,7 @@
 package hds.pvcos;
 
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,11 +11,11 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 
@@ -35,21 +36,27 @@ public class MainActivity extends Activity {
             // Not authed yet
             startActivity(new Intent(this, LoginActivity.class));
             finish();
+            return;
         }
 
         Log.w("PvCOS", "LORTET VIRKER");
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
         registerReceiver(broadcastReceiver, intentFilter);
+        registered = true;
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
-        unregisterReceiver(broadcastReceiver);
+        if (registered) {
+            unregisterReceiver(broadcastReceiver);
+            registered = false;
+        }
     }
 
+    private boolean registered;
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -76,40 +83,48 @@ public class MainActivity extends Activity {
 
         lastWifiChangeTime = curTime;
 
-        setSound(settings.getSoundOption());
+        setSound(settings.getWifiName(), settings.getSoundOption());
     }
 
-    private void setSound(SoundOption sound) {
+    private void setSound(String wifi, SoundOption sound) {
         if (sound == SoundOption.DoNothing)
             return;
 
-        String text;
+        String title;
+        String detail;
+        int ringerMode;
+
         if (sound == SoundOption.Mute) {
-            text = "Muting";
+            title = "Muted sound profile";
+            detail = "Your sound was muted because you logged on to " + wifi;
+            ringerMode = AudioManager.RINGER_MODE_SILENT;
+        } else if (sound == SoundOption.Unmute) {
+            title = "Unmuted sound profile";
+            detail = "Your sound was unmuted because you logged on to " + wifi;
+            ringerMode = AudioManager.RINGER_MODE_NORMAL;
         } else {
-            text = "Unmuting";
+            title = "Vibrate sound profile";
+            detail = "Your sound was changed to vibrate because you logged on to " + wifi;
+            ringerMode = AudioManager.RINGER_MODE_VIBRATE;
         }
 
-        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
-
         AudioManager audioMgr = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        audioMgr.setRingerMode(ringerMode);
 
-        if (sound == SoundOption.Mute)
-            muteStream(audioMgr, AudioManager.STREAM_MUSIC);
-        else
-            unmuteStream(audioMgr, AudioManager.STREAM_MUSIC);
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.cast_ic_notification_1)
+                .setContentTitle(title)
+                .setContentText(detail);
+
+        NotificationManager notificationMgr =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationMgr.notify(0, notificationBuilder.build());
     }
 
-    private void muteStream(AudioManager audioMgr, int stream) {
-        audioMgr.setStreamVolume(stream, 0, 0);
-    }
-
-    private void unmuteStream(AudioManager audioMgr, int stream) {
-        audioMgr.setStreamVolume(stream, audioMgr.getStreamMaxVolume(stream), 0);
-    }
-
-    public void buttonWifiNetworksClick(View v) {
-        startActivity(new Intent(this, WifiNetworksActivity.class));
+    public void buttonTestLogonClick(View v) {
+        WifiSettings settings = ((PvcApp)getApplication()).getWifiSettings("Test");
+        if (settings != null)
+            onLogonToWifi(settings);
     }
 
     public void buttonLogoutClick(View v) {

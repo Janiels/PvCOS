@@ -60,10 +60,6 @@
             android:label="@string/title_activity_bluetooth" >
         </activity>
         <activity
-            android:name=".WifiNetworksActivity"
-            android:label="@string/title_activity_wifi_networks" >
-        </activity>
-        <activity
             android:name=".NotificationsActivity"
             android:label="@string/title_activity_notifications" >
         </activity>
